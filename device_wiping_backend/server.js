@@ -4,21 +4,14 @@ import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Allow requests from the local frontend and the deployed frontend on Vercel.
-// The FRONTEND_URL will be set as an environment variable in Vercel.
-const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173'].filter(Boolean);
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
-
-app.use(cors(corsOptions));
+if (process.env.NODE_ENV === 'production') {
+  // Stricter CORS for production
+  const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173'].filter(Boolean);
+  app.use(cors({ origin: allowedOrigins }));
+} else {
+  // Permissive CORS for local development
+  app.use(cors());
+}
 app.use(express.json());
 
 // Serve static files from the 'public' directory
