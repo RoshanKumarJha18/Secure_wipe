@@ -1,84 +1,87 @@
 import express from "express";
 import cors from "cors";
 
+// --- Basic Setup ---
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-if (process.env.NODE_ENV === 'production') {
-  // Stricter CORS for production
-  const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173'].filter(Boolean);
-  app.use(cors({ origin: allowedOrigins }));
-} else {
-  // Permissive CORS for local development
-  app.use(cors());
-}
+// --- Middleware ---
+
+// CORS Configuration
+// In production (like on Render), it will only allow requests from the URL
+// you set in the FRONTEND_URL environment variable.
+// For local development, it allows requests from any origin.
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL
+    : '*',
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+// Middleware to parse JSON bodies from incoming requests
 app.use(express.json());
 
-// Serve static files from the 'public' directory
-app.use(express.static('public'));
-
-// Create a router for API endpoints
-const apiRouter = express.Router();
-
-// Demo devices
+// --- In-Memory Database ---
+// This is a simple in-memory array to store device data.
+// It will reset every time the server restarts.
 let devices = [
   { id: "SSD-001", model: "Samsung 970 EVO Plus", serialNo: "SN12345", status: "Available", wipeMethod: null, addedAt: new Date().toISOString() },
   { id: "HDD-002", model: "Seagate Barracuda 2TB", serialNo: "SN67890", status: "Available", wipeMethod: null, addedAt: new Date().toISOString() },
   { id: "LAP-003", model: "Dell Latitude 7420", serialNo: "SN11121", status: "Available", wipeMethod: null, addedAt: new Date().toISOString() },
 ];
 
-// A simple root route to check if the server is up and running
-app.get("/", (req, res) => {
-  res.send("Secure Wipe Backend is running. Visit /api for API routes.");
-});
+// --- Routes ---
 
-// Root endpoint
-apiRouter.get("/", (req, res) => {
-  res.send("Secure Wipe Backend is running.");
+// Health check route to easily see if the server is running
+app.get("/", (req, res) => {
+  res.status(200).send("Secure Wipe Backend is up and running!");
 });
 
 // Get all devices
-apiRouter.get("/devices", (req, res) => {
-  res.json(devices);
+app.get("/api/devices", (req, res) => {
+  res.status(200).json(devices);
 });
 
 // Add a new device
-apiRouter.post("/devices", (req, res) => {
+app.post("/api/devices", (req, res) => {
   let { id, model, serialNo } = req.body;
-  if (!model) return res.status(400).json({ error: "Model required" });
 
-  // Generate id and serialNo if not provided
+  if (!model) {
+    return res.status(400).json({ error: "Device model is required." });
+  }
+
+  // Generate a unique ID and a placeholder serial number if not provided
   if (!id) id = `MANUAL-${Math.random().toString(36).substr(2, 9)}`;
   if (!serialNo) serialNo = `SN-MANUAL-${Math.random().toString(36).substr(2, 6)}`;
 
   const newDevice = { id, model, serialNo, status: "Available", wipeMethod: null, addedAt: new Date().toISOString() };
   devices.push(newDevice);
-  res.status(201).json(newDevice); // 201 Created is more appropriate for a new resource
+
+  console.log("Added device:", newDevice);
+  res.status(201).json(newDevice);
 });
 
-// Wipe device
-apiRouter.post("/devices/:id/wipe", (req, res) => {
+// Wipe a specific device
+app.post("/api/devices/:id/wipe", (req, res) => {
   const { id } = req.params;
   const { method } = req.body;
+
   const device = devices.find((d) => d.id === id);
-  if (!device) return res.status(404).json({ error: "Device not found." });
+
+  if (!device) {
+    return res.status(404).json({ error: "Device not found." });
+  }
+
   device.status = "Wiped";
   device.wipeMethod = method;
   device.wipedAt = new Date().toISOString();
-  res.json(device);
+
+  console.log("Wiped device:", device);
+  res.status(200).json(device);
 });
 
-// Use the router for all /api routes
-app.use("/api", apiRouter);
-
-// Start the server for local development
-// This block will not run in a serverless environment like Vercel
-// because Vercel sets the VERCEL environment variable.
-if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}
-
-// Export the app for Vercel's serverless environment
-export default app;
+// --- Server Activation ---
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
