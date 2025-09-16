@@ -7,15 +7,23 @@ const PORT = process.env.PORT || 5001;
 
 // --- Middleware ---
 
-// CORS Configuration
-// In production (like on Render), it will only allow requests from the URL
-// you set in the FRONTEND_URL environment variable.
-// For local development, it allows requests from any origin.
+const normalizeOrigin = (url) => url?.replace(/\/$/, ""); // strip trailing slash
+
+const allowedOrigin = process.env.NODE_ENV === "production"
+  ? normalizeOrigin(process.env.FRONTEND_URL)
+  : "*";
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
-    : '*',
-  optionsSuccessStatus: 200
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigin === "*" || normalizeOrigin(origin) === allowedOrigin) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked: ${origin} not allowed`));
+    }
+  },
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
