@@ -73,10 +73,10 @@ app.use("/api", apiRouter);
 
 // Start the server for local development
 // This block will not run in a serverless environment like Vercel
-// because Vercel imports the `app` object instead of running the file directly.
-if (process.env.NODE_ENV !== 'production') {
+// because Vercel sets the VERCEL environment variable.
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
   });
 }
 
