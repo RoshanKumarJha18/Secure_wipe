@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
 
 export const getDevices = async () => {
   try {
@@ -27,7 +27,9 @@ export const addDevice = async (device) => {
 
 export const wipeDevice = async (id, method) => {
   try {
-    const response = await axios.post(`${API_URL}/wipe`, { id, method });
+    // Using a more RESTful endpoint structure, assuming the backend is set up for it.
+    // e.g., POST /api/devices/{id}/wipe
+    const response = await axios.post(`${API_URL}/devices/${id}/wipe`, { method });
     return response.data;
   } catch (error) {
     console.error("Failed to wipe device:", error.message);
@@ -38,25 +40,24 @@ export const wipeDevice = async (id, method) => {
 export const detectDevice = async () => {
   if (navigator.usb) {
     try {
-      // This part for WebUSB is fine as it creates a realistic model and serial.
       const device = await navigator.usb.requestDevice({ filters: [] });
-      const id = `USB-${Math.random().toString(36).substr(2, 9)}`;
-      const model = device.productName || `USB Device ${id}`;
-      const serialNo = device.serialNumber || `SN${Math.random().toString(36).substr(2, 8)}`;
-      return await addDevice({ id, model, serialNo });
+      // The backend will generate the ID and serial number.
+      // We only need to send the model information we can gather.
+      const model = device.productName || `WebUSB Device ${device.vendorId}:${device.productId}`;
+      const serialNumber = device.serialNumber;
+      return await addDevice({ model, serialNo: serialNumber });
     } catch (error) {
-      // Check if the error is due to the user canceling the prompt.
-      // The error message can vary slightly between browsers.
       if (error.name === 'NotFoundError' || error.message.includes('No device selected')) {
         console.log("User cancelled the device selection.");
         return null; // Return null to prevent adding a fallback device.
       }
       console.error("WebUSB error:", error); // Log other errors
+      // Don't fall back to simulation if WebUSB fails for reasons other than cancellation.
+      throw error;
     }
   }
   // Fallback simulation
-  // This should also only send the model, allowing the backend to generate the ID and Serial,
-  // just like a manual add.
+  console.log("WebUSB not supported, creating a simulated device.");
   const model = `Simulated USB Device ${Math.random().toString(36).substr(2, 4)}`;
   const fallbackDevice = await addDevice({ model });
   return fallbackDevice;

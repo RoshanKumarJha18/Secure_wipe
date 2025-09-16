@@ -1,5 +1,5 @@
 {
-  "name": "device-wiping-backend",
+  "name": "device_wiping_backend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
