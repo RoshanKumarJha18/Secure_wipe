@@ -54,7 +54,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black relative">
+    <div className="min-h-screen w-full bg-black relative ">
       {/* Cosmic Noise */}
       <div
         className="absolute inset-0 z-0"

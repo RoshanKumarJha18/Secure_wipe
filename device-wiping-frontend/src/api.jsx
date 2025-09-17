@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = (import.meta.env.VITE_API_URL || "https://secure-wipe.onrender.com/api").replace(/\/$/, '');  
+const API_URL = (import.meta.env.VITE_API_URL || "https://secure-wipe.onrender.com/api").replace(/\/$/, '');
 //http://localhost:5001/api
 export const getDevices = async () => {
   try {

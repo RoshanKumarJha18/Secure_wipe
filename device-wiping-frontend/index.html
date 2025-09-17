@@ -10,8 +10,6 @@
     <link rel="icon" type="image/svg+xml" href="/secure-wipe.svg" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -49,14 +47,14 @@
         --bg-dark: #1f2937;
       }
       @font-face {
-        font-family: gilroy ;
-        src: url(./assets/Gilroy-Medium.ttf);
+        font-family: rosh;
+        src: url(./fonts/Gilroy-Medium.ttf) format('truetype');
       }
 
       body {
         margin: 0;
         background-color: var(--bg-light);
-        font-family: gilroy !important;
+        font-family: rosh;
       }
 
       h1, h2, h3 {
@@ -131,7 +129,7 @@
       .terminal-content {
         background: var(--bg-dark);
         color: var(--wipe-green);
-        font-family: gilroy;
+        font-family: 'Courier New', monospace;
         padding: 2rem;
         border-radius: 0.75rem;
         width: 90%;
