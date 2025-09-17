@@ -24,7 +24,7 @@ const MainLayout = ({ children }) => {
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="bg-gray-900 text-gray-100 min-h-screen font-[gilroy]">
+      <div className="bg-gray-900 text-gray-100 min-h-screen !font-[gilroy]">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
