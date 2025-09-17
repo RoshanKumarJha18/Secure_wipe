@@ -125,7 +125,7 @@ const DevicePage = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-white">Device Management</h1>
           <p className="mt-3 text-lg text-gray-400 max-w-2xl mx-auto">
-            Securely wipe devices with NIST-compliant standards. Track progress and receive compliance certificates automatically.
+            Securely wipe devices using DoD-standard methods, track progress in real time, and generate automatic compliance certificates.
           </p>
         </div>
 
