@@ -50,7 +50,7 @@ export default function About() {
           <motion.div variants={cardVariants} initial="offscreen" whileInView="onscreen" viewport={{ once: true, amount: 0.5 }} className="bg-gray-800 p-8 rounded-xl border border-gray-700">
             <h2 className="text-2xl font-bold text-white mb-3">Compliance & Trust</h2>
             <p className="text-gray-400">
-              Compliant with <strong>NIST 800-88</strong> and <strong>DoD 5220.22-M</strong>, SecureWipe provides tamper-proof certificates for regulatory audits.
+              Compliant with and <strong>DoD 5220.22-M</strong>, SecureWipe provides tamper-proof certificates for regulatory audits.
             </p>
           </motion.div>
 

@@ -76,7 +76,7 @@ export default function Home() {
               Welcome to <span className="text-indigo-400">SecureWipe </span>
             </h1>
             <p className="mt-4 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-              Securely wipe SSDs, HDDs, and laptops with NIST 800-88 and DoD 5220.22-M standards. Ensure compliance and sustainability.
+              Securely wipe SSDs, HDDs, and laptops with DoD 5220.22-M standards. Ensure compliance and sustainability.
             </p>
             <div className="mt-8">
               <Link to="/devices" className="inline-block bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 shadow-lg shadow-indigo-500/20">
@@ -191,7 +191,7 @@ export default function Home() {
           {/* Compliance Section */}
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.5 }} className="bg-white/5 backdrop-blur-md p-10 rounded-xl border border-white/10">
             <h2 className="text-3xl font-bold text-white mb-4">Compliance & Trust</h2>
-            <p className="text-gray-300 max-w-3xl mx-auto mb-6">SecureWipe adheres to NIST SP 800-88 and DoD 5220.22-M standards, ensuring compliance for enterprises and data centers.</p>
+            <p className="text-gray-300 max-w-3xl mx-auto mb-6">SecureWipe adheres to DoD 5220.22-M standards, ensuring compliance for enterprises and data centers.</p>
             <Link to="/about" className="text-indigo-400 font-semibold hover:text-indigo-300">Learn More &rarr;</Link>
           </motion.div>
         </div>
