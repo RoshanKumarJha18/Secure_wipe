@@ -4,5 +4,5 @@
     src: url(./assets/Gilroy-Medium.ttf);
 }
 *{
-    font-family: gilroy;
+    font-family: gilroy !important ;
 }
